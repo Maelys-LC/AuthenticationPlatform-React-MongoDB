@@ -1,0 +1,49 @@
+/* #contacts {
+    width: 40%;
+    margin: auto;
+}
+.contact {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+}
+
+.contact>p {
+    display: flex;
+    align-items: center;
+}
+
+#delete {
+    margin-left: 10px;
+} */
+
+section {
+    width: 40%;
+    margin: auto;
+}
+h1 {
+    text-align: center;
+    font-size: 40px;
+}
+
+.contacts {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+}
+
+.contacts>p {
+    display: flex;
+    align-items: center;
+}
+
+.delete {
+    cursor: pointer;
+}
+
+strong{
+    margin-right: 5px;
+}
+

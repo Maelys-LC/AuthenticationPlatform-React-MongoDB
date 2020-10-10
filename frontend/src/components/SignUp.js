@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
-import store from "../store.js"
+import {useDispatch} from "react-redux"
 import { Redirect, Route, useHistory } from 'react-router-dom';
 import jwt from 'jsonwebtoken'
 
@@ -52,8 +52,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUp() {
-    let history = useHistory()
+  let history = useHistory()
   const classes = useStyles();
+  const dispatch = useDispatch()
 
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -74,10 +75,10 @@ export default function SignUp() {
   async function addUser(event) {
     event.preventDefault()
     let results = await axios.post("http://localhost:8080/sign-up", {name: name, email: email, password: password})
-    store.dispatch({type: 'ADD_TOKEN', token: results.data.token})
+    dispatch({type: 'ADD_TOKEN', token: results.data.token})
     let token = results.data.token
     let decoded = jwt.decode(token) 
-    store.dispatch({type: 'USER', user: decoded})
+    dispatch({type: 'USER', user: decoded})
     history.push('/dashboard')    
   }
 

@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import store from '../store'
+import {useDispatch, useSelector} from "react-redux"
 import { Redirect, Route, useHistory } from 'react-router-dom';
 
 
@@ -28,10 +28,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Header() {
     const classes = useStyles();
-    let history = useHistory()
+    const history = useHistory()
+    const dispatch = useDispatch()
+    const name = useSelector((state) => {return state.name})
 
     function signOut() {
-        store.dispatch({type: 'SIGN_OUT'})
+        dispatch({type: 'SIGN_OUT'})
         history.push("/")
     }
     
@@ -40,7 +42,7 @@ export default function Header() {
         <Toolbar>
             <Typography variant="h6" className={classes.title}>Dashboard</Typography>
             
-            <Typography variant="h6" className={classes.title}>{store.getState().name}</Typography>
+            <Typography variant="h6" className={classes.title}>{name}</Typography>
             <Button color="secondary" onClick={signOut}>Sign Out</Button>
         </Toolbar>
         </AppBar>

@@ -5,8 +5,8 @@ import SignUp from './SignUp'
 import '../style/Home.css'
 import Dashboard from './Dashboard'
 import Home from './Home'
-import store from "../store.js"
 import ContactsList from './ContactsList'
+import {useSelector} from "react-redux"
 
 
 export default function App() {
@@ -41,11 +41,12 @@ export default function App() {
 
 
 function PrivateRoute({children, ...rest}) {
+    const token = useSelector(state => state.token)
     return (
         <Route 
             {...rest}
             render={({location})=> {
-                if (store.getState().token) {
+                if (token) {
                     return (children)
                 } else {
                     return (<Redirect to={{pathname:'/', state: {from: location}}}/>)

@@ -13,9 +13,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
-import store from "../store.js"
 import { Redirect, Route, useHistory } from 'react-router-dom';
 import jwt from 'jsonwebtoken'
+import {useDispatch, useSelector} from "react-redux" 
 
 
 const useStyles = makeStyles((theme) => ({
@@ -39,8 +39,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUp() {
-    let history = useHistory()
+  
   const classes = useStyles()
+  const dispatch = useDispatch()
+  const id = useSelector((state)=> {return state.id})
+  const token = useSelector((state) => {return state.token})
 
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -56,9 +59,12 @@ export default function SignUp() {
 
   async function addContact(event) {
     event.preventDefault()
-    await axios.post("http://localhost:8080/add-new-contact", {name: name, email: email, user_affiliate: store.getState().id}, {headers: {token: store.getState().token}})
+    await axios.post("http://localhost:8080/add-new-contact", {name: name, email: email, user_affiliate: id}, {headers: {token: token}})
     
-    store.dispatch({type: 'ADD_CONTACT', contact: {name: name, email: email, user_affiliate: store.getState().id}})
+    dispatch({type: 'ADD_CONTACT', contact: {name: name, email: email, user_affiliate: id}})
+    
+    setName("")
+    setEmail("")
      
   }
 
@@ -73,11 +79,11 @@ export default function SignUp() {
         <form className={classes.form} noValidate onSubmit={addContact}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <TextField autoComplete="name" name="name" variant="outlined" required fullWidth id="name" label="Name" autoFocus onChange={changeName}/>
+              <TextField autoComplete="name" name="name" variant="outlined" value={name} required fullWidth id="name" label="Name" autoFocus onChange={changeName}/>
             </Grid>
             
             <Grid item xs={12}>
-              <TextField variant="outlined" required fullWidth id="email" label="Email Address" name="email" autoComplete="email" onChange={changeEmail}/>
+              <TextField variant="outlined" value={email} required fullWidth id="email" label="Email Address" name="email" autoComplete="email" onChange={changeEmail}/>
             </Grid>           
             
           </Grid>

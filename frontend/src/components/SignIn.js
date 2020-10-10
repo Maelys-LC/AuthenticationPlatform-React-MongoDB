@@ -14,7 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
 import { Redirect, Route, useHistory } from 'react-router-dom';
-import store from "../store.js"
+import {useDispatch, useSelector} from 'react-redux'
 import jwt from 'jsonwebtoken'
 
 
@@ -54,8 +54,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   let history = useHistory()
-
   const classes = useStyles();
+  const dispatch = useDispatch()
+  // const id = useSelector((state) => {return state.id})
+  // const token = useSelector((state) => {return state.token})
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -69,20 +71,20 @@ export default function SignIn() {
     setPassword(event.target.value)
   }
 
-  async function getContacts(){
-    let results = await axios.get("http://localhost:8080/get-contacts/" + store.getState().id, {headers: {token: store.getState().token}})
-    store.dispatch({type: 'GET_CONTACTS', contacts: results.data})
+  async function getContacts(id, token){
+    let results = await axios.get("http://localhost:8080/get-contacts/" + id, {headers: {token: token}})
+    dispatch({type: 'GET_CONTACTS', contacts: results.data})
   }
   
 
   async function connexion(event) {
     event.preventDefault()
     let results = await axios.post("http://localhost:8080/sign-in", {email: email, password: password})
-    store.dispatch({type: 'ADD_TOKEN', token: results.data.token})
-    let token = results.data.token
-    let decoded = jwt.decode(token) 
-    store.dispatch({type: 'USER', user: decoded})
-    await getContacts()
+    await dispatch({type: 'ADD_TOKEN', token: results.data.token})
+    let token = await results.data.token
+    let decoded = await jwt.decode(token) 
+    await dispatch({type: 'USER', user: decoded})
+    await getContacts(decoded.id, token)
     history.push('/dashboard')
   }
 
